@@ -1,17 +1,19 @@
+import { useSelector } from 'react-redux'
 import {FC} from 'react'
-import { BasicCard } from './ToDoCards'
-
+import { TodoCard } from './ToDoCard'
+import { ITodo } from '../types'
 
 interface IProps {
-  goods: any;
-  onEditItem: any;
+  showForm: () => void;
 }
 
-export const ToDoItems: FC<IProps> = ({goods, onEditItem}) => {
+export const ToDoItems: FC<IProps> = ({ showForm }) => {
 
+  const todos = useSelector((state: any) => state.todos.todos)
+  
   return(
     <div className="App">
-     {goods.map((g:any) => <BasicCard key={g.id} item={g} onEditItem={onEditItem}/>)}
+     {todos.map((todo: ITodo) => <TodoCard key={todo.id} showForm={showForm} todo={todo} />)}
     </div>
   )
 }

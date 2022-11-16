@@ -5,6 +5,6 @@ export interface ITodo {
   title: string;
   description: string;
   status: STATUS;
-  //creationDate:  
-  // updateDate:
+  creationDate: number; 
+  updateDate: number;
 }  

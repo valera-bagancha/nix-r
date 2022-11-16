@@ -21,9 +21,9 @@ interface IProps {
 }
 
 export const TodoCard: FC<IProps> = ({todo, showForm}) => {
-  const [selectedStatus, setSelectedStatus] = useState<STATUS>(STATUS.OPEN);
-
   const { id, title, description, status } = todo;
+  const [selectedStatus, setSelectedStatus] = useState<STATUS>(status);
+
   const dispatch = useDispatch();  
 
   const onEditTodo = useCallback(() => {

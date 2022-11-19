@@ -1,48 +1,62 @@
-
 import { useCallback, FC, useState, useEffect } from 'react'
-import { Card, CardActions, CardContent, Button, Typography, Box, MenuItem, InputLabel, FormControl, Select } from '@mui/material';
+import { useDispatch } from 'react-redux'
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Typography,
+  Box,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Select,
+} from '@mui/material'
 import { STATUS } from '../types/enums'
-import { useDispatch } from 'react-redux';
-import { deleteTodo, setEditableTodo, updateTodo } from '../redux/todos/actions';
-import { ITodo } from '../types';
-import { statusBgs } from '../constants/statusBgs';
-
+import { deleteTodo, setEditableTodo, updateTodo } from '../redux/todos/actions'
+import { ITodo } from '../types'
+import { statusBgs } from '../constants/statusBgs'
 
 interface IProps {
-  todo: ITodo;
-  showForm: () => void;
+  todo: ITodo
+  showForm: () => void
 }
 
-export const TodoCard: FC<IProps> = ({todo, showForm}) => {
-  const { id, title, description, status } = todo;
-  const [selectedStatus, setSelectedStatus] = useState<STATUS>(status);
+export const TodoCard: FC<IProps> = ({ todo, showForm }) => {
+  const { id, title, description, status } = todo
+  const [selectedStatus, setSelectedStatus] = useState<STATUS>(status)
 
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch()
 
   const onEditTodo = useCallback(() => {
-    dispatch(setEditableTodo(todo));
-    
-    showForm();
-  }, [dispatch, todo, showForm]);
+    dispatch(setEditableTodo(todo))
 
-  const onDeleteTodo = useCallback(() => 
-    dispatch(deleteTodo(id)), [dispatch, id]);
+    showForm()
+  }, [dispatch, todo, showForm])
+
+  const onDeleteTodo = useCallback(
+    () => dispatch(deleteTodo(id)),
+    [dispatch, id]
+  )
 
   const onChange = useCallback((event: any) => {
     setSelectedStatus(event.target.value)
   }, [])
 
   useEffect(() => {
-    if(status === selectedStatus) return;
+    if (status === selectedStatus) return
 
-    const updatedTodo = {...todo, status: selectedStatus};
+    const updatedTodo = { ...todo, status: selectedStatus }
 
     dispatch(updateTodo(updatedTodo))
   }, [dispatch, selectedStatus, todo, status])
 
   return (
-    <Card className='body-card' sx={{ width: 275, margin: '10px', backgroundColor: statusBgs[status] }}>
-      <Box sx={{ width: 128 }} className='status'>
+    <Card
+      className="body-card"
+      sx={{ width: 275, margin: '10px', backgroundColor: statusBgs[status] }}
+    >
+      <Box sx={{ width: 128 }} className="status">
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Status</InputLabel>
           <Select
@@ -59,17 +73,19 @@ export const TodoCard: FC<IProps> = ({todo, showForm}) => {
         </FormControl>
       </Box>
       <CardContent>
-        <Typography sx={{ fontSize: 15 }}>
-          {title}
-        </Typography>
+        <Typography sx={{ fontSize: 15 }}>{title}</Typography>
         <Typography variant="body2" color="gray">
-        {description}
+          {description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={onEditTodo}>Edit</Button>
-        <Button size="small" onClick={onDeleteTodo}>Remove</Button>
+        <Button size="small" onClick={onEditTodo}>
+          Edit
+        </Button>
+        <Button size="small" onClick={onDeleteTodo}>
+          Remove
+        </Button>
       </CardActions>
     </Card>
-  );
+  )
 }

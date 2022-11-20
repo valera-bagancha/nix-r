@@ -1,4 +1,4 @@
-# Homework is in the lesson 2 branch
+# Homework number 2 is in the lesson 2 branch
 
 
 # Getting Started with Create React App

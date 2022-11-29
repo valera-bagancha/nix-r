@@ -1,22 +1,30 @@
-import { Button, InputLabel, MenuItem, Select } from '@mui/material'
-import { FC, useCallback, useState } from 'react'
+import { Button, CircularProgress, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 } from 'uuid'
 
 import { FormModal } from '../components/FormModal'
 import { ToDoItems } from '../components/ToDoItems'
 import { date } from '../constants/date'
-import { createTodo, setEditableTodo, updateTodo } from '../redux/todos/actions'
-import { IState } from '../redux/types'
+import { useAppDispatch } from '../hooks/useAppDispatch'
+import { getTodosAsync } from '../redux/todos/actions'
+import { createTodo, updateTodo } from '../redux/todos/actionsCreators'
+import { editableTodoSelector } from '../redux/todos/todoSelectors'
 import { STATUS } from '../types/enums'
 
 export const TodosPage: FC = () => {
   const [isFormDisplayed, setIsFormDisplayed] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState('default')
-  const [sortByDate, setSortByDate] = useState('default')
+  const [sortByAlphabet, setSortByAlphabet] = useState('default')
+  const [value, setValue] = useState('')
 
-  const editableTodo = useSelector((state: IState) => state.todos.editableTodo)
-  const dispatch = useDispatch()
+  const editableTodo = useSelector(editableTodoSelector);
+  const dispatch = useAppDispatch()
+
+
+  useEffect(() => {
+    dispatch(getTodosAsync())
+  }, [])
 
   const showForm = useCallback(() => {
     setIsFormDisplayed(true)
@@ -24,8 +32,7 @@ export const TodosPage: FC = () => {
 
   const hideForm = useCallback(() => {
     setIsFormDisplayed(false)
-    dispatch(setEditableTodo(null))
-  }, [dispatch])
+  }, [])
 
   const onSaveModal = useCallback(
     (title: string, description: string) => {
@@ -59,11 +66,13 @@ export const TodosPage: FC = () => {
   }, [])
 
   const onSortChange = useCallback((event: any) => {
-    setSortByDate(event.target.value)
+    setSortByAlphabet(event.target.value)
   }, [])
+
 
   return (
     <>
+      <TextField placeholder='Search' value={value} onChange={e => setValue(e.target.value)}/>
       <InputLabel id="demo-simple-select">Filter by status</InputLabel>
       <Select
         labelId="demo-simple-select"
@@ -77,20 +86,21 @@ export const TodosPage: FC = () => {
         <MenuItem value={STATUS.IN_PROGRESS}>{STATUS.IN_PROGRESS}</MenuItem>
         <MenuItem value={STATUS.DONE}>{STATUS.DONE}</MenuItem>
       </Select>
-      <InputLabel id="demo-simple-select">Sort by date</InputLabel>
+      <InputLabel id="demo-simple-select">Sort by alphabet</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo"
-        value={sortByDate}
+        value={sortByAlphabet}
         label="date"
         onChange={onSortChange}
       >
         <MenuItem value='default'>Default</MenuItem>
-        <MenuItem value={date.creationDate}>Creation date</MenuItem>
-        <MenuItem value={date.updateDate}>Update date</MenuItem>
+        <MenuItem value={date.asc}>asc</MenuItem>
+        <MenuItem value={date.desc}>desc</MenuItem>
       </Select>
       <ToDoItems
-        sortByDate={sortByDate}
+        value={value}
+        sortByAlphabet={sortByAlphabet}
         selectedStatus={selectedStatus}
         showForm={showForm}
       />

@@ -1,5 +1,9 @@
 import { Box, Button, TextField } from '@mui/material'
-import { useCallback, useState, ChangeEvent, FC } from 'react'
+import { useCallback, useState, ChangeEvent, FC, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useAppDispatch } from '../hooks/useAppDispatch'
+import { createTodoAsync, editTodoAsync } from '../redux/todos/actions'
+import { editableTodoSelector } from '../redux/todos/todoSelectors'
 
 const style = {
   position: 'absolute',
@@ -29,22 +33,45 @@ export const FormModal: FC<IProps> = ({
 }) => {
   const [title, setTitle] = useState(defaultTitle)
   const [description, setDescription] = useState(defaultDescription)
+  const [scrollTop, setScrollTop] = useState(0)
 
-  const onTitleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+  const dispatch = useAppDispatch()
+
+  const editableTodo = useSelector(editableTodoSelector);
+
+  useEffect(() => {
+    const scrollHandler = () => {
+      setScrollTop(document.documentElement.scrollTop)
+    }
+    window.addEventListener('scroll', scrollHandler)
+    return () => {
+      window.removeEventListener('scroll', scrollHandler);
+    }
+  }, [])
+
+  const { innerHeight } = window;
+  const result = innerHeight/2 + scrollTop;  
+  style.top = `${result}px`;
+
+  const onTitleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
     setTitle((event.target as HTMLInputElement).value)
   }, [])
 
   const onDescriptionChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setDescription((event.target as HTMLInputElement).value)
-    },
-    []
-  )
+    }, [])
 
-  const clickHandler = useCallback(
-    () => onClick(title, description),
-    [title, description, onClick]
-  )
+  const clickHandler = useCallback(() => {
+    if (editableTodo) {
+      dispatch(editTodoAsync(editableTodo.id, title, description))
+    } else {
+      dispatch(createTodoAsync(title, description))
+    }
+    onHideForm()
+  }, [title, description, onClick, editableTodo])
+
 
   return (
     <div>
@@ -66,6 +93,7 @@ export const FormModal: FC<IProps> = ({
           onChange={onDescriptionChange}
         />
         <Button
+
           onClick={clickHandler}
           size="large"
           sx={{ width: 275, margin: '10px', backgroundColor: '#EAEAEA' }}

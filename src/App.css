@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   z-index: 100;
+  transition: all 0.1s ease;
 }
 
 .body-card {
@@ -12,6 +13,10 @@
 .status {
  margin-top: 5px;
  z-index: -15;
+}
+
+.loaderTodos {
+  margin: 50px;
 }
 
 

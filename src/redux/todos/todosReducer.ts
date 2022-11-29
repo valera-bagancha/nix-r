@@ -1,17 +1,20 @@
-import { InitialToDoItem } from '../../constants/todos'
 import {
+  CHARTS_LOADED,
   CREATE_TODO,
   DELETE_TODO,
   SET_EDITABLE_TODO,
+  SET_TODOS,
   UPDATE_TODO,
 } from './actionTypes'
+import { ITodosState } from './types'
 
 const initialState = {
-  todos: InitialToDoItem,
+  todos: [],
   editableTodo: null,
+  loading: false,
 }
 
-export const todosReducer = (state = initialState, { type, payload }: any) => {
+export const todosReducer = (state: ITodosState = initialState, { type, payload }: any) => {
   switch (type) {
     case UPDATE_TODO:
       return {
@@ -35,6 +38,16 @@ export const todosReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         todos: [...state.todos, payload],
+      }
+    case SET_TODOS:
+      return {
+        ...state,
+        todos: payload,
+      }
+    case CHARTS_LOADED:
+      return {
+        ...state,
+        loading: payload,
       }
 
     default:

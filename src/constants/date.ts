@@ -1,4 +1,4 @@
 export const date = {
-  creationDate: 'creationDate',
-  updateDate: 'updateDate',
+  asc: 'asc',
+  desc: 'desc',
 }

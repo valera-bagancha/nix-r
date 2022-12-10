@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux'
-import { FC, useMemo } from 'react'
+import { useSelector, connect } from 'react-redux'
+import { Component, FC, ReactNode, useMemo } from 'react'
 import { CircularProgress } from '@mui/material'
-import { TodoCard } from './ToDoCard'
+import  TodoCard  from './ToDoCard'
 import { ITodo } from '../types'
 import { loaderSelector, todosSelector } from '../redux/todos/todoSelectors'
 
@@ -11,6 +11,41 @@ interface IProps {
   sortByAlphabet: string
   value: string
 }
+
+// class ToDoItems extends Component<IProps> {  
+//   constructor(props: IProps) {
+//     super(props);
+//     this.state = {
+    
+//     };
+//     console.log(props.showForm);
+//     console.log(props.selectedStatus);
+//     console.log(props.sortByAlphabet);
+//     console.log(props.value);
+//   }
+
+
+//   render() {
+//     return(
+//       <div className="App">
+//         {false ? <CircularProgress className='loaderTodos'/> : (sortedTodosByAlphabet.map((todo: ITodo) => (
+//           <TodoCard key={todo.id} showForm={showForm} todo={todo} />
+//         )))}
+//       </div>
+//     )
+//   }
+// }
+
+// const mapStateToProps = (state: any) => ({
+//   todos: todosSelector(state),
+//   loading: loaderSelector(state)
+// })
+
+// const mapDispatchToProps = (dispatch: any) => ({
+ 
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps)(ToDoItems);
 
 export const ToDoItems: FC<IProps> = ({
   value,

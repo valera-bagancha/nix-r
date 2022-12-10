@@ -1,9 +1,11 @@
 import { Box, Button, TextField } from '@mui/material'
-import { useCallback, useState, ChangeEvent, FC, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { stat } from 'fs'
+import { useCallback, useState, ChangeEvent, FC, useEffect, Component, ReactNode} from 'react'
+import { useSelector, connect } from 'react-redux'
 import { useAppDispatch } from '../hooks/useAppDispatch'
 import { createTodoAsync, editTodoAsync } from '../redux/todos/actions'
 import { editableTodoSelector } from '../redux/todos/todoSelectors'
+import { ITodo } from '../types'
 
 const style = {
   position: 'absolute',
@@ -19,62 +21,83 @@ const style = {
 }
 
 interface IProps {
-  onHideForm: () => void
-  onClick: (title: string, description: string) => void
-  defaultTitle: string
-  defaultDescription: string
+  onHideForm: () => void;
+  onClick: (title: string, description: string) => void;
+  defaultTitle: string;
+  defaultDescription: string;
+  dispatchEditTodoAsync: (editableTodo: any, title: string, description: string) => void;
+  editableTodo: ITodo | null;
+  dispatchCreateTodoAsync: (title: string, description: string) => void
 }
 
-export const FormModal: FC<IProps> = ({
-  onHideForm,
-  onClick,
-  defaultTitle,
-  defaultDescription,
-}) => {
-  const [title, setTitle] = useState(defaultTitle)
-  const [description, setDescription] = useState(defaultDescription)
-  const [scrollTop, setScrollTop] = useState(0)
+interface IState {
+  title: string;
+  description: string;
+  scrollTop: number;
+}
 
-  const dispatch = useAppDispatch()
 
-  const editableTodo = useSelector(editableTodoSelector);
 
-  useEffect(() => {
+class FormModal extends Component<IProps, IState> {
+
+  state = {
+    title: this.props.defaultTitle,
+    description: this.props.defaultDescription,
+    scrollTop: 0
+  };
+
+  componentDidMount() {
+    const {scrollTop} = this.state
+    this.func()
+    const { innerHeight } = window;
+    const result = innerHeight/2 + scrollTop;  
+    style.top = `${result}px`;
+  }
+  
+  componentDidUpdate() {
+    this.func()
+  }
+
+  func = () => {
     const scrollHandler = () => {
-      setScrollTop(document.documentElement.scrollTop)
+      this.setState({
+        scrollTop: document.documentElement.scrollTop
+      })
     }
     window.addEventListener('scroll', scrollHandler)
     return () => {
       window.removeEventListener('scroll', scrollHandler);
-    }
-  }, [])
+    } 
+  }
 
-  const { innerHeight } = window;
-  const result = innerHeight/2 + scrollTop;  
-  style.top = `${result}px`;
+  onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      title:(event.target as HTMLInputElement).value
+    })
+  }
 
-  const onTitleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-    setTitle((event.target as HTMLInputElement).value)
-  }, [])
+  onDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      description:(event.target as HTMLInputElement).value
+    })
+  }
 
-  const onDescriptionChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setDescription((event.target as HTMLInputElement).value)
-    }, [])
-
-  const clickHandler = useCallback(() => {
+  clickHandler = () => {
+    const {title, description} = this.state
+    const {dispatchEditTodoAsync, onHideForm, editableTodo, dispatchCreateTodoAsync} = this.props
     if (editableTodo) {
-      dispatch(editTodoAsync(editableTodo.id, title, description))
+      dispatchEditTodoAsync(editableTodo.id, title, description)
     } else {
-      dispatch(createTodoAsync(title, description))
+      dispatchCreateTodoAsync(title, description)
     }
     onHideForm()
-  }, [title, description, onClick, editableTodo])
+  }
 
-
-  return (
-    <div>
+  render() {
+    const {title, description} = this.state
+    const {onHideForm} = this.props 
+    return (
+      <div>
       <Box className="App" sx={style}>
         <TextField
           id="outlined-basic"
@@ -82,7 +105,7 @@ export const FormModal: FC<IProps> = ({
           variant="outlined"
           sx={{ width: 275, margin: '10px' }}
           value={title}
-          onChange={onTitleChange}
+          onChange={this.onTitleChange}
         />
         <TextField
           id="outlined"
@@ -90,11 +113,10 @@ export const FormModal: FC<IProps> = ({
           variant="outlined"
           sx={{ width: 275, margin: '10px' }}
           value={description}
-          onChange={onDescriptionChange}
+          onChange={this.onDescriptionChange}
         />
         <Button
-
-          onClick={clickHandler}
+          onClick={this.clickHandler}
           size="large"
           sx={{ width: 275, margin: '10px', backgroundColor: '#EAEAEA' }}
         >
@@ -109,5 +131,105 @@ export const FormModal: FC<IProps> = ({
         </Button>
       </Box>
     </div>
-  )
+    ) 
+  }
 }
+
+const mapStateToProps = (state: any) => ({
+  editableTodo: editableTodoSelector(state)
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  dispatchEditTodoAsync: (editableTodo: any, title: string, description: string) => 
+  dispatch(editTodoAsync(editableTodo.id, title, description)),
+  dispatchCreateTodoAsync: (title: string, description: string) => dispatch(createTodoAsync(title, description))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormModal);
+
+// export const FormModal: FC<IProps> = ({
+//   onHideForm,
+//   onClick,
+//   defaultTitle,
+//   defaultDescription,
+// }) => {
+//   const [title, setTitle] = useState(defaultTitle)
+//   const [description, setDescription] = useState(defaultDescription)
+//   const [scrollTop, setScrollTop] = useState(0)
+
+//   const dispatch = useAppDispatch()
+
+//   const editableTodo = useSelector(editableTodoSelector);
+
+//   useEffect(() => {
+//     const scrollHandler = () => {
+//       setScrollTop(document.documentElement.scrollTop)
+//     }
+//     window.addEventListener('scroll', scrollHandler)
+//     return () => {
+//       window.removeEventListener('scroll', scrollHandler);
+//     }
+//   }, [])
+
+//   const { innerHeight } = window;
+//   const result = innerHeight/2 + scrollTop;  
+//   style.top = `${result}px`;
+
+//   const onTitleChange = useCallback(
+//     (event: ChangeEvent<HTMLInputElement>) => {
+//     setTitle((event.target as HTMLInputElement).value)
+//   }, [])
+
+//   const onDescriptionChange = useCallback(
+//     (event: ChangeEvent<HTMLInputElement>) => {
+//       setDescription((event.target as HTMLInputElement).value)
+//     }, [])
+
+//   const clickHandler = useCallback(() => {
+//     if (editableTodo) {
+//       dispatch(editTodoAsync(editableTodo.id, title, description))
+//     } else {
+//       dispatch(createTodoAsync(title, description))
+//     }
+//     onHideForm()
+//   }, [title, description, onClick, editableTodo])
+
+
+//   return (
+//     <div>
+//       <Box className="App" sx={style}>
+//         <TextField
+//           id="outlined-basic"
+//           label="Title"
+//           variant="outlined"
+//           sx={{ width: 275, margin: '10px' }}
+//           value={title}
+//           onChange={onTitleChange}
+//         />
+//         <TextField
+//           id="outlined"
+//           label="Description"
+//           variant="outlined"
+//           sx={{ width: 275, margin: '10px' }}
+//           value={description}
+//           onChange={onDescriptionChange}
+//         />
+//         <Button
+
+//           onClick={clickHandler}
+//           size="large"
+//           sx={{ width: 275, margin: '10px', backgroundColor: '#EAEAEA' }}
+//         >
+//           Save
+//         </Button>
+//         <Button
+//           onClick={onHideForm}
+//           size="large"
+//           sx={{ width: 275, margin: '10px', backgroundColor: '#EAEAEA' }}
+//         >
+//           Hide
+//         </Button>
+//       </Box>
+//     </div>
+//   )
+// }

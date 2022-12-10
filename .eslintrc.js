@@ -29,6 +29,9 @@ module.exports = {
     'import/extensions': 'off',
     'default-param-last': 'off',
     'no-shadow': 'off',
+    'react/prefer-stateless-function': 'off',
+    'react/state-in-constructor': 'off',
+    'react/destructuring-assignment': 'off',
   },
   parser: '@typescript-eslint/parser',
   

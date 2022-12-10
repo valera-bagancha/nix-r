@@ -45,6 +45,8 @@ export const createTodoAsync = (title: string, description: string) => async (di
  } 
 
  export const editTodoAsync = (id: string, title: string, description: string) => async (dispatch: AppDispatch) => {
+  console.log('asdf');
+  
   dispatch(loader(true))
   const response = await fetch(`${URLS.goods}/${id}`, {
     method: 'PATCH',

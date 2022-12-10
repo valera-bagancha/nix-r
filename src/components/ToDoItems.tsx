@@ -1,5 +1,5 @@
 import { useSelector, connect } from 'react-redux'
-import { Component, FC, ReactNode, useMemo } from 'react'
+import { Component, FC, useMemo } from 'react'
 import { CircularProgress } from '@mui/material'
 import  TodoCard  from './ToDoCard'
 import { ITodo } from '../types'
@@ -11,6 +11,8 @@ interface IProps {
   sortByAlphabet: string
   value: string
 }
+
+
 
 // class ToDoItems extends Component<IProps> {  
 //   constructor(props: IProps) {
@@ -24,12 +26,23 @@ interface IProps {
 //     console.log(props.value);
 //   }
 
+//   componentDidMount() {
+//     this.filteredTodosByStatus = this.props.todos
+//   }
+
+//   componentDidUpdate() {
+//       if (this.props.value === '') {
+//         this.filteredTodosByStatus = this.props.todos.filter((todo: ITodo) => todo.title.toLowerCase().includes(this.props.value.toLowerCase()))
+//       }
+//     }
+//   }
+
 
 //   render() {
 //     return(
 //       <div className="App">
 //         {false ? <CircularProgress className='loaderTodos'/> : (sortedTodosByAlphabet.map((todo: ITodo) => (
-//           <TodoCard key={todo.id} showForm={showForm} todo={todo} />
+//           <TodoCard key={todo.id} showForm={this.props.showForm} todo={todo} />
 //         )))}
 //       </div>
 //     )
@@ -38,7 +51,7 @@ interface IProps {
 
 // const mapStateToProps = (state: any) => ({
 //   todos: todosSelector(state),
-//   loading: loaderSelector(state)
+//   // loading: loaderSelector(state)
 // })
 
 // const mapDispatchToProps = (dispatch: any) => ({

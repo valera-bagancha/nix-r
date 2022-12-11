@@ -1,6 +1,6 @@
-import { Button, CircularProgress, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { v4 } from 'uuid'
 
 import { FormModal } from '../components/FormModal'

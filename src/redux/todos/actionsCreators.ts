@@ -21,7 +21,7 @@ export const deleteTodo = (todoId: string) => ({
   payload: todoId,
 });
 
-export const createTodo = (todo: any) => ({
+export const createTodo = (todo: ITodo) => ({
   type: CREATE_TODO,
   payload: todo,
 });

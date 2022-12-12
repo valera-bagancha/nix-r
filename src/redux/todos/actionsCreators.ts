@@ -1,5 +1,8 @@
+
 import { ITodo } from "../../types";
-import { CHARTS_LOADED, CREATE_TODO, DELETE_TODO, SET_EDITABLE_TODO, SET_TODOS, UPDATE_TODO } from "./actionTypes";
+import { ActionTypes } from "./types";
+
+const { CHARTS_LOADED, CREATE_TODO, DELETE_TODO, SET_EDITABLE_TODO, SET_TODOS, UPDATE_TODO } = ActionTypes;
 
 export const updateTodo = (todo: ITodo) => ({
   type: UPDATE_TODO,
@@ -26,7 +29,7 @@ export const createTodo = (todo: ITodo) => ({
   payload: todo,
 });
 
-export const setTodos = (todos: any) => ({
+export const setTodos = (todos: ITodo[]) => ({
   type: SET_TODOS,
   payload: todos,
 });

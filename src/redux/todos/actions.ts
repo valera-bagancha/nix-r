@@ -1,14 +1,12 @@
-import { title } from 'process';
-import { ChangeEvent, useState } from 'react';
+import { Dispatch } from 'redux';
 import { URLS } from '../../constants/api'
 import { addStatusesToGoods } from '../../helpers/addStatusesToGoods';
 import { delay } from '../../helpers/delay';
 import { createTodo, deleteTodo, loader, setTodos, updateTodo } from './actionsCreators'
-import { AppDispatch } from './types'
 
   
 
-export const getTodosAsync = () => async (dispatch: AppDispatch) => {
+export const getTodosAsync = () => async (dispatch: Dispatch): Promise<void> => {
   dispatch(loader(true))
   const response = await fetch(URLS.goods);
   const goods = await response.json();
@@ -18,7 +16,7 @@ export const getTodosAsync = () => async (dispatch: AppDispatch) => {
 }
 
 
-export const deleteTodoAsync = (id: string) => async (dispatch: AppDispatch) => {
+export const deleteTodoAsync = (id: string) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(loader(true))
  await fetch(`${URLS.goods}/${id}`, {
   method: 'DELETE',
@@ -29,7 +27,7 @@ export const deleteTodoAsync = (id: string) => async (dispatch: AppDispatch) => 
 } 
 
 
-export const createTodoAsync = (title: string, description: string) => async (dispatch: AppDispatch) => {
+export const createTodoAsync = (title: string, description: string) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(loader(true))
   const response = await fetch(`${URLS.goods}`, {
     method: 'POST',
@@ -44,7 +42,7 @@ export const createTodoAsync = (title: string, description: string) => async (di
   dispatch(createTodo(todo))
  } 
 
- export const editTodoAsync = (id: string, title: string, description: string) => async (dispatch: AppDispatch) => {
+ export const editTodoAsync = (id: string, title: string, description: string) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(loader(true))
   const response = await fetch(`${URLS.goods}/${id}`, {
     method: 'PATCH',

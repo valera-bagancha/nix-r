@@ -1,12 +1,4 @@
-import {
-  CHARTS_LOADED,
-  CREATE_TODO,
-  DELETE_TODO,
-  SET_EDITABLE_TODO,
-  SET_TODOS,
-  UPDATE_TODO,
-} from './actionTypes'
-import { ITodosState } from './types'
+import { Action, ITodosState, ActionTypes } from './types'
 
 const initialState = {
   todos: [],
@@ -14,9 +6,9 @@ const initialState = {
   loading: false,
 }
 
-export const todosReducer = (state: ITodosState = initialState, { type, payload }: any) => {
+export const todosReducer = (state: ITodosState = initialState, { type, payload }: Action) => {
   switch (type) {
-    case UPDATE_TODO:
+    case ActionTypes.UPDATE_TODO:
       return {
         ...state,
         todos: state.todos.map(todo =>
@@ -24,27 +16,27 @@ export const todosReducer = (state: ITodosState = initialState, { type, payload 
         ),
       }
 
-    case SET_EDITABLE_TODO:
+    case ActionTypes.SET_EDITABLE_TODO:
       return {
         ...state,
         editableTodo: payload,
       }
-    case DELETE_TODO:
+    case ActionTypes.DELETE_TODO:
       return {
         ...state,
         todos: state.todos.filter(todo => todo.id !== payload),
       }
-    case CREATE_TODO:
+    case ActionTypes.CREATE_TODO:
       return {
         ...state,
         todos: [...state.todos, payload],
       }
-    case SET_TODOS:
+    case ActionTypes.SET_TODOS:
       return {
         ...state,
         todos: payload,
       }
-    case CHARTS_LOADED:
+    case ActionTypes.CHARTS_LOADED:
       return {
         ...state,
         loading: payload,

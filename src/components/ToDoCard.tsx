@@ -12,6 +12,7 @@ import {
   FormControl,
   Select,
   CircularProgress,
+  SelectChangeEvent,
 } from '@mui/material'
 import { STATUS } from '../types/enums'
 import { setEditableTodo, updateTodo } from '../redux/todos/actionsCreators'
@@ -45,8 +46,8 @@ export const TodoCard: FC<IProps> = ({ todo, showForm }) => {
   )
 
 
-  const onChange = useCallback((event: any) => {
-    setSelectedStatus(event.target.value)
+  const onChange = useCallback((event: SelectChangeEvent<unknown>) => {
+    setSelectedStatus(event.target.value as STATUS)
   }, [])
 
   useEffect(() => {

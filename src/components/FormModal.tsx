@@ -1,7 +1,6 @@
 import { Box, Button, TextField } from '@mui/material'
 import { useCallback, useState, ChangeEvent, FC, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from '../hooks/useAppDispatch'
+import { useDispatch, useSelector } from 'react-redux'
 import { createTodoAsync, editTodoAsync } from '../redux/todos/actions'
 import { editableTodoSelector } from '../redux/todos/todoSelectors'
 
@@ -35,7 +34,7 @@ export const FormModal: FC<IProps> = ({
   const [description, setDescription] = useState(defaultDescription)
   const [scrollTop, setScrollTop] = useState(0)
 
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const editableTodo = useSelector(editableTodoSelector);
 

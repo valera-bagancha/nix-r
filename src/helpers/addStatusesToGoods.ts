@@ -1,3 +1,4 @@
+import { ITodo } from "../types";
 import { STATUS } from "../types/enums"
 
-export const addStatusesToGoods = (goods: any) => goods.map((item: any) => ({ ...item, status: STATUS.OPEN }));
+export const addStatusesToGoods = (goods: ITodo[]) => goods.map((item: ITodo) => ({ ...item, status: STATUS.OPEN }));

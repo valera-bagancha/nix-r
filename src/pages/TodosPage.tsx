@@ -1,5 +1,5 @@
-import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { Button, InputLabel, MenuItem, Select, TextField, SelectChangeEvent } from '@mui/material'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { v4 } from 'uuid'
 
@@ -11,6 +11,7 @@ import { getTodosAsync } from '../redux/todos/actions'
 import { createTodo, updateTodo } from '../redux/todos/actionsCreators'
 import { editableTodoSelector } from '../redux/todos/todoSelectors'
 import { STATUS } from '../types/enums'
+
 
 export const TodosPage: FC = () => {
   const [isFormDisplayed, setIsFormDisplayed] = useState(false)
@@ -61,12 +62,12 @@ export const TodosPage: FC = () => {
     [editableTodo, dispatch, hideForm]
   )
 
-  const onStatusChange = useCallback((event: any) => {
-    setSelectedStatus(event.target.value)
+  const onStatusChange = useCallback((event: SelectChangeEvent<unknown>) => {
+    setSelectedStatus(event.target.value as STATUS)
   }, [])
 
-  const onSortChange = useCallback((event: any) => {
-    setSortByAlphabet(event.target.value)
+  const onSortChange = useCallback((event:  SelectChangeEvent<unknown>) => {
+    setSortByAlphabet(event.target.value as STATUS)
   }, [])
 
 
